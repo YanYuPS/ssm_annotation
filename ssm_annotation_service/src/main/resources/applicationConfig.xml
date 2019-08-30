@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                          ">
+
+    <import resource="classpath:jdbc/jdbc.xml"/>
+
+    <!--组件扫描-->
+    <context:component-scan base-package="service"/>
+    <!--<context:component-scan base-package="mapper"/>-->
+
+
+    <!--配置mybatis-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:sqlMapConfig-spring.xml"></property>
+        <!--<property name="plugins">  &lt;!&ndash;传入PageHelper插件&ndash;&gt;-->
+        <!--<array>-->
+        <!--<bean class="com.github.pagehelper.PageInterceptor">-->
+        <!--<property name="properties">-->
+        <!--<props>-->
+        <!--<prop key="helperDialect">mysql</prop>-->
+        <!--<prop key="reasonable">true</prop>-->
+        <!--</props>-->
+        <!--</property>-->
+        <!--</bean>-->
+        <!--</array>-->
+        <!--</property>-->
+    </bean>
+    <!--扫描mapper所在包，为mapper创建实现类-->
+    <bean id="configurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="mapper"/>
+    </bean>
+
+
+    <!--平台事务管理器-->
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!--事务 注解驱动-->
+    <tx:annotation-driven transaction-manager="dataSourceTransactionManager"></tx:annotation-driven>
+
+</beans>
