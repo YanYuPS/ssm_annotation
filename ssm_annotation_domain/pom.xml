@@ -11,5 +11,8 @@
 
     <artifactId>ssm_annotation_domain</artifactId>
 
+<dependencies>
+
+</dependencies>
 
 </project>

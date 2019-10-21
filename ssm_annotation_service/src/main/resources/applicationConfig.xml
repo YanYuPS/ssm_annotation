@@ -19,18 +19,18 @@
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"></property>
         <property name="configLocation" value="classpath:sqlMapConfig-spring.xml"></property>
-        <!--<property name="plugins">  &lt;!&ndash;传入PageHelper插件&ndash;&gt;-->
-        <!--<array>-->
-        <!--<bean class="com.github.pagehelper.PageInterceptor">-->
-        <!--<property name="properties">-->
-        <!--<props>-->
-        <!--<prop key="helperDialect">mysql</prop>-->
-        <!--<prop key="reasonable">true</prop>-->
-        <!--</props>-->
-        <!--</property>-->
-        <!--</bean>-->
-        <!--</array>-->
-        <!--</property>-->
+        <property name="plugins">  <!--传入PageHelper插件-->
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <props>
+                            <prop key="helperDialect">mysql</prop>
+                            <prop key="reasonable">true</prop>
+                        </props>
+                    </property>
+                </bean>
+            </array>
+        </property>
     </bean>
     <!--扫描mapper所在包，为mapper创建实现类-->
     <bean id="configurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">

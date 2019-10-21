@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!--开启 方法权限控制-->
+    <security:global-method-security jsr250-annotations="enabled"></security:global-method-security>
+
+    <!-- 以下 不被拦截 -->
+    <security:http security="none" pattern="/pages/login.jsp" />
+    <!--<security:http security="none" pattern="/loginPage.do" />-->
+    <security:http security="none" pattern="/pages/failure.jsp" />
+    <security:http security="none" pattern="/pages/failure_403.jsp" />
+    <security:http security="none" pattern="/css/**" />
+    <security:http security="none" pattern="/img/**" />
+    <security:http security="none" pattern="/js/**" />
+    <security:http security="none" pattern="/plugins/**" />
+    <security:http security="none" pattern="/node_modules/**" />
+    <security:http security="none" pattern="/package-lock.json" />
+    <security:http security="none" pattern="/package.json" />
+
+
+    <!--页面拦截规则-->
+    <!--
+        use-expressions 为是否使用使用 Spring 表达式语言（ SpEL ），默认为true ,
+        如果开启，则拦截的配置应该写成以下形式：
+        <intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+    -->
+    <security:http auto-config="true" use-expressions="true" >
+
+        <!--
+            intercept-url定义一个过滤规则
+            pattern 表示对哪些url进行权限控制
+                /*  表示的是该目录下的资源，只包括本级目录不包括下级目录
+                /** 表示的是该目录以及该目录下所有级别子目录的资源
+            access 表示在请求对应的URL时需要什么权限
+        -->
+        <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER','ROLE_ADMIN')" />
+
+        <!--开启表单登陆：
+                    登录页面、
+                    登录url、
+                    身份验证失败 跳转页面、(用户名密码错误)
+                    成功进行身份验证和授权后 默认展示页面、
+                    authentication-success-forward-url 登录成功 页面
+        -->
+        <!--<security:form-login login-page="/loginPage.do"-->
+                            <!--login-processing-url="/login"-->
+                            <!--authentication-failure-url="/loginPage.do?error=error"-->
+                            <!--default-target-url="/pages/index.jsp"-->
+        <!--/>-->
+        <security:form-login login-page="/pages/login.jsp"
+                            login-processing-url="/login.do"
+                            authentication-failure-url="/pages/failure.jsp"
+                            default-target-url="/pages/index.jsp"
+        />
+
+         <!--关闭 跨站请求伪造-->
+        <security:csrf disabled="true" />
+
+        <!--退出登录-->
+        <!--<security:logout invalidate-session="true" logout-url="/logout.do" logout-success-url="/loginPage.do"/>-->
+
+        <!--<security:logout invalidate-session="true" logout-url="/logout.do" logout-success-url="/"/>-->
+
+    </security:http>
+
+    <!--认证管理-->
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="userService">
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+
+</beans>
